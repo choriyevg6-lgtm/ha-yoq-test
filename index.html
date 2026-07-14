@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  body {
+    background: radial-gradient(circle at 30% 20%, #2b1055, #0f0c29 60%, #000000 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .stars {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+      radial-gradient(2px 2px at 60px 120px, #fff, transparent),
+      radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+      radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+      radial-gradient(2px 2px at 160px 10px, #fff, transparent),
+      radial-gradient(1px 1px at 200px 150px, #fff, transparent);
+    background-repeat: repeat;
+    background-size: 220px 180px;
+    opacity: 0.5;
+    animation: twinkle 3s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle {
+    from { opacity: 0.25; }
+    to { opacity: 0.6; }
+  }
+  .card {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 40px 30px;
+    max-width: 90vw;
+  }
+  h1 {
+    color: #fff;
+    font-size: clamp(22px, 6vw, 34px);
+    margin-bottom: 40px;
+    text-shadow: 0 0 20px rgba(255,255,255,0.3);
+  }
+  .buttons {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    height: 80px;
+  }
+  button {
+    font-size: 20px;
+    font-weight: 600;
+    padding: 16px 40px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  #yes {
+    background: linear-gradient(135deg, #34d399, #059669);
+    color: white;
+    box-shadow: 0 6px 20px rgba(5,150,105,0.4);
+  }
+  #yes:hover {
+    transform: scale(1.06);
+  }
+  #no {
+    background: linear-gradient(135deg, #f87171, #dc2626);
+    color: white;
+    box-shadow: 0 6px 20px rgba(220,38,38,0.4);
+  }
+  #no.escaping {
+    position: fixed;
+    z-index: 10;
+  }
+  .success {
+    display: none;
+    color: #fff;
+    font-size: clamp(20px, 5vw, 30px);
+    margin-top: 30px;
+    text-shadow: 0 0 25px rgba(52,211,153,0.7);
+  }
+  .success.show {
+    display: block;
+    animation: pop 0.4s ease;
+  }
+  @keyframes pop {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .counter {
+    color: rgba(255,255,255,0.5);
+    font-size: 14px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="card">
+  <h1>Fon go'zalmi? 🌌</h1>
+  <div class="buttons">
+    <button id="yes">Ha</button>
+    <button id="no">Yo'q</button>
+  </div>
+  <div class="counter" id="counter"></div>
+  <div class="success" id="success">Albatta ha! 🎉 Rahmat, test tugadi.</div>
+</div>
+
+<script>
+  const noBtn = document.getElementById('no');
+  const yesBtn = document.getElementById('yes');
+  const success = document.getElementById('success');
+  const counter = document.getElementById('counter');
+  let escapeCount = 0;
+
+  function runAway() {
+    if (!noBtn.classList.contains('escaping')) {
+      noBtn.classList.add('escaping');
+    }
+
+    escapeCount++;
+    counter.textContent = "Yo'q tugmasi qochdi: " + escapeCount + " marta 😂";
+
+    const margin = 60;
+    const btnWidth = noBtn.offsetWidth;
+    const btnHeight = noBtn.offsetHeight;
+    const maxX = window.innerWidth - btnWidth - margin;
+    const maxY = window.innerHeight - btnHeight - margin;
+
+    const newX = Math.random() * maxX + margin / 2;
+    const newY = Math.random() * maxY + margin / 2;
+
+    noBtn.style.left = newX + 'px';
+    noBtn.style.top = newY + 'px';
+  }
+
+  noBtn.addEventListener('mouseover', runAway);
+  noBtn.addEventListener('click', function(e){
+    e.preventDefault();
+    runAway();
+  });
+  noBtn.addEventListener('touchstart', function(e){
+    e.preventDefault();
+    runAway();
+  });
+
+  yesBtn.addEventListener('click', function() {
+    success.classList.add('show');
+    noBtn.style.display = 'none';
+    yesBtn.style.display = 'none';
+    counter.style.display = 'none';
+  });
+</script>
+</body>
+</html>
